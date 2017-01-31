@@ -1,0 +1,137 @@
+<html>
+    <head>
+
+        <style>
+      body {
+        margin: 10px;
+        padding: 10px;
+      }
+    </style>
+
+<script src="\node_modules\socket.io-client\dist\socket.io.js"></script>
+
+
+
+    </head>
+<body>
+<h1>Lego Robot Acceleromter Data</h1>
+
+<p></p>
+<p></p>
+<p></p>
+
+
+<table style="border: 1px solid black">
+	<tbody>
+		<tr>
+			<td style="border: 1px solid black">acceleration x:</td>
+			<td id = 'accelerationX' style="border: 1px solid black">X</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black">acceleration y:</td>
+			<td id='accelerationY' style="border: 1px solid black">Y</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black">Motor Speed:</td>
+			<td id='speed' style="border: 1px solid black">Z</td>
+		</tr>
+	</tbody>
+</table>
+
+
+
+
+</body>
+<script>
+    var socket = io('http://192.168.0.68:444');
+
+    socket.on('alert', function(data){
+        console.log(data);    
+    });
+
+//declare global varilables
+
+var x;
+var y;
+var z;
+
+//create function to sample gyro event X times a second
+
+function sample(x, y, z){
+
+
+};
+
+
+//Call ID function to identify new unique client connection
+ ID();
+
+    function ID(newConnection){
+        var connectionID = Math.random();
+        var newConnection = 'new connection to server created ID =  ' + connectionID ;
+
+        return newConnection;
+    };
+// Create Client ID variable from IF fucntion and give RETURN to socket.emit server to log the new client in the server
+var ClientID = ID()
+socket.emit('clientConnection', ClientID );
+
+//function to extract Gryo Data from phone
+function AccelData(){
+
+
+    window.ondevicemotion  = function(e){
+    var xraw = e.accelerationIncludingGravity.x;
+    var yraw = e.accelerationIncludingGravity.y;
+    var zraw = e.accelerationIncludingGravity.z;
+
+    //set multiplier for the acceleration raw data
+    var multi = 10;
+    var Zmulti = 5;
+    //round the values to useable numbers
+    var xround = xraw * multi;
+    var yround = yraw * multi;
+    var zround = zraw * Zmulti;
+
+     x = Math.round(xround);
+     y = Math.round(yround);
+     z = Math.round(zround);
+
+    //update client page with acceleraometer data if not origianl emiiter
+        socket.on('gyro', function(data){
+        document.getElementById("accelerationX").innerHTML = data.x
+        document.getElementById("accelerationY").innerHTML = data.y
+        document.getElementById("speed").innerHTML = data.z
+
+});
+
+canvas(x, y ,z);
+
+
+    // send data over the socket to server
+    socket.emit('acceleration', {'x':x, 'y':y, 'z':z});
+
+    //update client page if only client connected
+
+    document.getElementById("accelerationX").innerHTML = x
+    document.getElementById("accelerationY").innerHTML = y
+    document.getElementById("speed").innerHTML = z
+}
+
+
+
+
+};
+
+//Access Gyro Data function
+
+AccelData();
+
+
+</script>
+
+
+</html>
+
+
+

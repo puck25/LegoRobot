@@ -1,0 +1,16 @@
+{
+  "name": "legorobot",
+  "version": "1.0.0",
+  "description": "Lego Robot Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Keir Frampton",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "jshint": "^2.9.4",
+    "socketio": "^1.0.0"
+  }
+}
